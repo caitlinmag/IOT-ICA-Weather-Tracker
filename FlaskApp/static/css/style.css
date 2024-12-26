@@ -1,0 +1,16 @@
+body{
+    background-color: #dee2e3;
+}
+
+.weather-button{
+    background-color:  #84bcbc;
+}
+
+.card{
+    margin: 6rem;
+    border-radius: 15px;
+}
+
+.index-images{
+    border-radius: 15px;
+}
