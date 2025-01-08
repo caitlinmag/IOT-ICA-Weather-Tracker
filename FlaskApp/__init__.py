@@ -4,7 +4,6 @@ import pathlib
 import requests
 
 from flask import Flask, session, redirect, request, abort, render_template
-
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
@@ -19,7 +18,7 @@ GOOGLE_CLIENT_ID = (
     "489456852449-balvkioklqhrjc61peed6vh680ej4aj7.apps.googleusercontent.com"
 )
 
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, ".client_secret.json")
 
 flow = Flow.from_client_secrets_file(
     client_secrets_file=client_secrets_file,
@@ -28,10 +27,9 @@ flow = Flow.from_client_secrets_file(
         "https://www.googleapis.com/auth/userinfo.email",
         "openid",
     ],
-    redirect_uri="http://127.0.0.1:5000/callback",
+    redirect_uri="https://weatherlookout.online/callback",
+    # change the uri to be the domain
 )
-
-# change the redirect uri to being domain name
 
 
 def login_is_required(function):
@@ -66,6 +64,11 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
+
+
+@app.route("/tracker")
+def tracker():
+    return render_template("tracker.html")
 
 
 # where we deal with the response from google
