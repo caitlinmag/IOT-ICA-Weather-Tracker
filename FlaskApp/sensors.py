@@ -6,7 +6,7 @@ import board
 dht_device = adafruit_dht.DHT22(board.D17)
 Buzzer_pin = 23
 Green_LED = 18  # green LED connected to GPIO 18
-Red_LED = 12
+Red_LED = 12  # red LED connected to GPIO 12
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -25,28 +25,18 @@ def beep(repeat):
         time.sleep(0.2)
 
 
-# turn on green led
-def green_led():
+# normal humidity range between 41 - 69
+def normal_humidity():
     GPIO.output(Green_LED, GPIO.HIGH)
-    print("Green LED is turned on")
-
-
-# turn the green led off
-def green_led_off():
-    GPIO.output(Green_LED, GPIO.LOW)
-    print("Green LED is turned off")
-
-
-# turn on red led
-def red_led():
-    GPIO.output(Red_LED, GPIO.HIGH)
-    print("Red LED is turned on")
-
-
-# turn off red led
-def red_led_off():
     GPIO.output(Red_LED, GPIO.LOW)
-    print("Green LED is turned off")
+    print("Green LED on, Red LED off")
+
+
+# bad humidity range less than 40 or greater than 70
+def bad_humidity():
+    GPIO.output(Green_LED, GPIO.LOW)
+    GPIO.output(Red_LED, GPIO.HIGH)
+    print("Green LED off, Red LED on")
 
 
 while True:
@@ -64,15 +54,14 @@ while True:
     except RuntimeError as err:
         print(err.args[0])
 
-    if humidity > 40 or humidity < 70:
+    if humidity >= 41 and humidity <= 69:
         print("Normal humidity range.")
-        green_led()  # turn on green led
-        red_led_off()
-    elif humidity < 40 or humidity > 70:
-        print("Activate buzzer, humidity is outside normal range")
+        normal_humidity()
+    else:
+        # out of normal humidity range
+        print("Activate buzzer, humidity outside of normal range")
+        bad_humidity()
         beep(3)
-        red_led()  # turn on red led
-        green_led_off()
 
     time.sleep(2.0)
 
