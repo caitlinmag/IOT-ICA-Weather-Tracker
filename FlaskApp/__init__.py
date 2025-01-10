@@ -10,13 +10,11 @@ from pip._vendor import cachecontrol
 import google.auth.transport.requests
 
 app = Flask(__name__)
-app.secret_key = "weathersecret"
+app.secret_key = app.config.get("APP_SECRET_KEY")
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
-GOOGLE_CLIENT_ID = (
-    "489456852449-balvkioklqhrjc61peed6vh680ej4aj7.apps.googleusercontent.com"
-)
+GOOGLE_CLIENT_ID = app.config.get("GOOGLE_CLIENT_ID")
 
 client_secrets_file = os.path.join(pathlib.Path(__file__).parent, ".client_secret.json")
 
@@ -30,6 +28,9 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="https://weatherlookout.online/callback",
     # change the uri to be the domain
 )
+
+alive = 0
+data = {}
 
 
 def login_is_required(function):
@@ -93,8 +94,18 @@ def callback():
 
     session["name"] = id_info.get("name")
     print(session["name"])
-
     return redirect("/main")
+
+
+@app.route("/keep_alive")
+def keep_alive():
+    global alive, data
+    alive += 1
+    keep_alive_count = str(alive)
+    data["keep_alive"] = keep_alive_count
+    parsed_json = json.dumps(data)
+    print(parsed_json)
+    return str(parsed_json)
 
 
 if __name__ == "__main__":
