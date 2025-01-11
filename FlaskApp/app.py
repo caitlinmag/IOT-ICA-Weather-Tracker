@@ -135,9 +135,10 @@ def get_weather_details():
             temperature=float(temperature), humidity=float(humidity)
         )
         current_weather_status = mongoDB.get_current_weather_record()
-        return render_template(
-            "tracker.html", current_weather_status=current_weather_status
-        )
+        return redirect("/tracker")
+        # return render_template(
+        #     "tracker.html", current_weather_status=current_weather_status
+        # )
     else:
         return "No data recieved"
 
