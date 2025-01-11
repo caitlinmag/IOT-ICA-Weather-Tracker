@@ -96,14 +96,14 @@ def main():
                     )
                 )
                 pubnub.publish().channel(app_channel).message(
-                    temperature_c
-                ).custom_message_type("temperature").sync()
+                    {"type": "temperature", "value": temperature_c}
+                ).sync()
 
                 pubnub.publish().channel(app_channel).message(temperature_f).sync()
 
                 pubnub.publish().channel(app_channel).message(
-                    humidity
-                ).custom_message_type("humidity").sync()
+                    {"type": "humidity", "value": humidity}
+                ).sync()
                 if humidity >= 41 and humidity <= 69:
                     print("Normal humidity range.")
                     normal_humidity()
