@@ -8,9 +8,11 @@
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" href="/static/favicon.png" type="image.png">
+    <script src="static/js/main.js"></script>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.8.2.8.js"></script>
 </head>
 {% include "header.html" %}
-<body>
+<body onload="hideDataInputs(); setupPubNub();">
     <form action="/get_temp_and_humidity" method="POST">
     <div class="container">
     <div class="d-flex justify-content-center">
@@ -37,7 +39,7 @@
 
 <div class="justify-content-between">
         <a href="/tracker">
-            <button class="rounded float-right mb-4" data-toggle="button" style="background-color: #DDC977; border-color: white;">
+            <button class="rounded float-right mb-4" data-toggle="button" style="background-color: #DDC977; border-color: white;" type="submit">
                 Continue
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16" style="background-color: #DDC977; border-color: white;">
                 <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
