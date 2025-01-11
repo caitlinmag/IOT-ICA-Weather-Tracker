@@ -5,16 +5,19 @@ import requests
 
 from flask import Flask, session, redirect, request, abort, render_template
 from flask_mongoengine import MongoEngine
-import mongoDB
-import pb
-import os
+from . import mongoDB
+from . import pb
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
+from dotenv import load_dotenv
 import google.auth.transport.requests
+
+load_dotenv()
 
 app = Flask(__name__)
 database_URI = os.getenv("DATABASE_URI")
+app.config["MONGODB_SETTINGS"] = {"host": database_URI}
 app.secret_key = app.config.get("APP_SECRET_KEY")
 
 db = MongoEngine()
@@ -78,8 +81,10 @@ def logout():
 
 @app.route("/tracker")
 def tracker():
-    weather_record = mongoDB.get_weather_details()
-    return render_template("tracker.html", weather_record=weather_record)
+    current_weather_status = mongoDB.get_current_weather_record()
+    return render_template(
+        "tracker.html", current_weather_status=current_weather_status
+    )
 
 
 # where we deal with the response from google
@@ -126,8 +131,15 @@ def get_weather_details():
     print("Humidity:", humidity)
 
     if temperature and humidity:
-        mongoDB.add_new_weather_data(temperature=temperature, humidity=humidity)
-    return "Temp and humidity received"
+        mongoDB.add_new_weather_data(
+            temperature=float(temperature), humidity=float(humidity)
+        )
+        current_weather_status = mongoDB.get_current_weather_record()
+        return render_template(
+            "tracker.html", current_weather_status=current_weather_status
+        )
+    else:
+        return "No data recieved"
 
 
 if __name__ == "__main__":
