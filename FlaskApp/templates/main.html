@@ -11,6 +11,7 @@
 </head>
 {% include "header.html" %}
 <body>
+    <form action="/get_temp_and_humidity" method="POST">
     <div class="container">
     <div class="d-flex justify-content-center">
     <div class="card" style="background-color: white; width: 20rem">
@@ -31,6 +32,9 @@
     </div>
     </div>
 </div>
+<input type="number" id="temperature" name="temperature" class="w-2 mx-auto mb-4"> 
+<input type="number" id="humidity" name="humidity" class="w-2 mx-auto mb-4"> 
+
 <div class="justify-content-between">
         <a href="/tracker">
             <button class="rounded float-right mb-4" data-toggle="button" style="background-color: #DDC977; border-color: white;">
@@ -41,6 +45,7 @@
             </button>
         </a>
 </div>
+</form>
 </body>
 </html
 
